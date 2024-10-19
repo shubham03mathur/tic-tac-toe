@@ -1,35 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import Player from "./components/Player";
+import GameBoard from "./components/GameBoard";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [activePlayer, setActivePlayer] = useState("X");
+    const [gameTurn, setGameTurn] = useState([]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const onSelectGameTurn = (rowIndex, colIndex) => {
+        setActivePlayer((prevActivePlayer) =>
+            prevActivePlayer === "X" ? "0" : "X"
+        );
+
+        setGameTurn((prevGameTurn) => {
+            let currentPlayer = "X";
+
+            if (prevGameTurn?.[0]?.player === "X") {
+                currentPlayer = "0";
+            }
+            const updatedGameTurn = [
+                {
+                    square: { row: rowIndex, col: colIndex },
+                    player: currentPlayer,
+                },
+                ...prevGameTurn,
+            ];
+            return updatedGameTurn;
+        });
+    };
+    return (
+        <>
+            <header>
+                <img src="" alt="" />
+            </header>
+            <main>
+                <div id="game-container">
+                    <ol id="players" className="highlight-player">
+                        <Player
+                            playerName="Player 1"
+                            symbol="X"
+                            isActive={activePlayer === "X"}
+                        />
+                        <Player
+                            playerName="Player 2"
+                            symbol="0"
+                            isActive={activePlayer === "0"}
+                        />
+                    </ol>
+                    <GameBoard
+                        turns={gameTurn}
+                        onSelectGameTurn={onSelectGameTurn}
+                    />
+                </div>
+                LOGS
+            </main>
+        </>
+    );
 }
 
-export default App
+export default App;
