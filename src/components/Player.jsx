@@ -11,7 +11,9 @@ function Player({ playerName, symbol, handleNameChange, isActive }) {
 
     const handleChange = (event) => {
         setEditableName(event.target.value);
-        handleNameChange(symbol, event.target.value);
+        if (isEditing) {
+            handleNameChange(symbol, event.target.value);
+        }
     };
 
     return (
