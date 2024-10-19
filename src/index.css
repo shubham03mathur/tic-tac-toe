@@ -190,6 +190,11 @@ ol {
   padding: 1rem;
 }
 
+#game-board button:disabled {
+  cursor: not-allowed;
+}
+
+
 #game-over {
   position: absolute;
   top: 0;

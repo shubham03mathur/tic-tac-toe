@@ -1,22 +1,80 @@
 import { useState } from "react";
 import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
+import Log from "./components/Log";
+import GameOver from "./components/GameOver";
+
+import { WINNING_COMBINATIONS } from "./utils/winning-combinations";
+
+const initialGameboard = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+];
+
+const getDerivedActivePlayer = (gameTurn) => {
+    let currentPlayer = "X";
+
+    if (gameTurn?.[0]?.player === "X") {
+        currentPlayer = "O";
+    }
+
+    return currentPlayer;
+};
 
 function App() {
-    const [activePlayer, setActivePlayer] = useState("X");
     const [gameTurn, setGameTurn] = useState([]);
+    const [playerNames, setPlayerNames] = useState({
+        X: "Player 1",
+        O: "Player 2"
+    })
+
+    const activePlayer = getDerivedActivePlayer(gameTurn);
+    let gameBoard = [...initialGameboard.map(array => [...array])];
+    let winner;
+
+    for (const turn of gameTurn) {
+        const { square, player } = turn;
+        const { row, col } = square;
+        
+        gameBoard[row][col] = player;
+    }
+
+    for (const combination of WINNING_COMBINATIONS) {
+        const firstSquareSymbol =
+            gameBoard[combination[0].row][combination[0].column];
+        const secondSquareSymbol =
+            gameBoard[combination[1].row][combination[1].column];
+        const thirdSquareSymbol =
+            gameBoard[combination[2].row][combination[2].column];
+
+        if (
+            firstSquareSymbol &&
+            firstSquareSymbol === secondSquareSymbol &&
+            firstSquareSymbol === thirdSquareSymbol
+        ) {
+            winner = playerNames[firstSquareSymbol];
+        }
+    }
+
+    const isDraw = gameTurn.length === 9 && !winner;
+
+    const onRematch = () => {
+        setGameTurn([]);
+    }
+
+    const handlePlayerNameChange = (symbol, playerName) => {
+        setPlayerNames(prevPlayerNames => {
+            return {
+                ...prevPlayerNames,
+                [symbol]: playerName
+            }
+        });
+    }
 
     const onSelectGameTurn = (rowIndex, colIndex) => {
-        setActivePlayer((prevActivePlayer) =>
-            prevActivePlayer === "X" ? "0" : "X"
-        );
-
         setGameTurn((prevGameTurn) => {
-            let currentPlayer = "X";
-
-            if (prevGameTurn?.[0]?.player === "X") {
-                currentPlayer = "0";
-            }
+            const currentPlayer = getDerivedActivePlayer(prevGameTurn);
             const updatedGameTurn = [
                 {
                     square: { row: rowIndex, col: colIndex },
@@ -30,29 +88,35 @@ function App() {
     return (
         <>
             <header>
-                <img src="" alt="" />
+                <img src="game-logo.png" alt="logo" />
+                <h1>Tic-Tac-Toe</h1>
             </header>
-            <main>
-                <div id="game-container">
-                    <ol id="players" className="highlight-player">
-                        <Player
-                            playerName="Player 1"
-                            symbol="X"
-                            isActive={activePlayer === "X"}
+            <div>
+                <main>
+                    <div id="game-container">
+                        <ol id="players" className="highlight-player">
+                            <Player
+                                playerName={playerNames.X}
+                                symbol="X"
+                                handleNameChange={handlePlayerNameChange}
+                                isActive={activePlayer === "X"}
+                            />
+                            <Player
+                                playerName={playerNames.O}
+                                symbol="O"
+                                handleNameChange={handlePlayerNameChange}
+                                isActive={activePlayer === "O"}
+                            />
+                        </ol>
+                        {(winner || isDraw) && <GameOver winner={winner} onRematch={onRematch}/>}
+                        <GameBoard
+                            board={gameBoard}
+                            onSelectGameTurn={onSelectGameTurn}
                         />
-                        <Player
-                            playerName="Player 2"
-                            symbol="0"
-                            isActive={activePlayer === "0"}
-                        />
-                    </ol>
-                    <GameBoard
-                        turns={gameTurn}
-                        onSelectGameTurn={onSelectGameTurn}
-                    />
-                </div>
-                LOGS
-            </main>
+                    </div>
+                </main>
+            </div>
+            <Log turns={gameTurn} />
         </>
     );
 }

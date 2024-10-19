@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
-function Player({ playerName, symbol, isActive }) {
+function Player({ playerName, symbol, handleNameChange, isActive }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editableName, setEditableName] = useState(playerName);
 
@@ -11,6 +11,7 @@ function Player({ playerName, symbol, isActive }) {
 
     const handleChange = (event) => {
         setEditableName(event.target.value);
+        handleNameChange(symbol, event.target.value);
     };
 
     return (
