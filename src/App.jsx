@@ -51,7 +51,7 @@ const deriveWinner = (gameBoard, players) => {
 function App() {
     const [gameTurn, setGameTurn] = useState([]);
     const [players, setPlayers] = useState(PLAYERS);
-
+    const isMobile = window.innerWidth <= 768;
     const activePlayer = getDerivedActivePlayer(gameTurn);
     let gameBoard = [...INITIAL_GAMEBOARD.map((array) => [...array])];
     for (const turn of gameTurn) {
@@ -85,70 +85,93 @@ function App() {
                 {
                     square: { row: rowIndex, col: colIndex },
                     player: currentPlayer,
-                    playerName: players[currentPlayer]
+                    playerName: players[currentPlayer],
                 },
                 ...prevGameTurn,
             ];
             return updatedGameTurn;
         });
     };
-    return (
-        <>
-            <header>
-                <img src="game-logo.png" alt="logo" />
-                <h1 style={{ marginBottom: "5px" }}>Tic-Tac-Toe</h1>
-                <center>
-                    <small>
-                        <span style={{ color: "#3f3b00" }}>Made with</span> ❤️{" "}
-                        <span style={{ color: "#3f3b00" }}>
-                            by{" "}
-                            <a
-                                target="_blank"
-                                href="https://www.linkedin.com/in/shubham-mathur-88502657/"
-                            >
-                                Shubham
-                            </a>
-                        </span>
-                    </small>
-                </center>
-            </header>
-            <div className="main-container">
-                <div className="game-board-container">
-                    <main>
-                        <div id="game-container">
-                            <ol id="players" className="highlight-player">
-                                <Player
-                                    playerName={PLAYERS.X}
-                                    symbol="X"
-                                    handleNameChange={handlePlayerNameChange}
-                                    isActive={activePlayer === "X"}
+
+    let contentToBeDisplayed = null;
+    if (isMobile) {
+        contentToBeDisplayed = (
+            <div
+                className="mobile-message"
+            >
+                <p>
+                    🚧 Mobile App is under development. Please use a desktop or
+                    larger screen. 🚧
+                </p>
+            </div>
+        );
+    } else {
+        contentToBeDisplayed = (
+            <div
+                className="app-content"
+            >
+                <header>
+                    <img src="game-logo.png" alt="logo" />
+                    <h1 style={{ marginBottom: "5px" }}>Tic-Tac-Toe</h1>
+                    <center>
+                        <small>
+                            <span style={{ color: "#3f3b00" }}>Made with</span>{" "}
+                            ❤️{" "}
+                            <span style={{ color: "#3f3b00" }}>
+                                by{" "}
+                                <a
+                                    target="_blank"
+                                    href="https://www.linkedin.com/in/shubham-mathur-88502657/"
+                                >
+                                    Shubham
+                                </a>
+                            </span>
+                        </small>
+                    </center>
+                </header>
+                <div className="main-container">
+                    <div className="game-board-container">
+                        <main>
+                            <div id="game-container">
+                                <ol id="players" className="highlight-player">
+                                    <Player
+                                        playerName={PLAYERS.X}
+                                        symbol="X"
+                                        handleNameChange={
+                                            handlePlayerNameChange
+                                        }
+                                        isActive={activePlayer === "X"}
+                                    />
+                                    <Player
+                                        playerName={PLAYERS.O}
+                                        symbol="O"
+                                        handleNameChange={
+                                            handlePlayerNameChange
+                                        }
+                                        isActive={activePlayer === "O"}
+                                    />
+                                </ol>
+                                {(winner || isDraw) && (
+                                    <GameOver
+                                        winner={winner}
+                                        onRematch={onRematch}
+                                    />
+                                )}
+                                <GameBoard
+                                    board={gameBoard}
+                                    onSelectGameTurn={onSelectGameTurn}
                                 />
-                                <Player
-                                    playerName={PLAYERS.O}
-                                    symbol="O"
-                                    handleNameChange={handlePlayerNameChange}
-                                    isActive={activePlayer === "O"}
-                                />
-                            </ol>
-                            {(winner || isDraw) && (
-                                <GameOver
-                                    winner={winner}
-                                    onRematch={onRematch}
-                                />
-                            )}
-                            <GameBoard
-                                board={gameBoard}
-                                onSelectGameTurn={onSelectGameTurn}
-                            />
-                        </div>
-                    </main>
-                </div>
-                <div className="log-container">
-                    <Log turns={gameTurn} />
+                            </div>
+                        </main>
+                    </div>
+                    <div className="log-container">
+                        <Log turns={gameTurn} />
+                    </div>
                 </div>
             </div>
-        </>
-    );
+        );
+    }
+    return contentToBeDisplayed;
 }
 
 export default App;
