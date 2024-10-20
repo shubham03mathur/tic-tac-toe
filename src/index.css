@@ -354,3 +354,27 @@ ol {
     transform: scale(1);
   }
 }
+
+.main-container {
+  display: flex;
+  justify-content: center;
+}
+
+.game-board-container {
+  flex-grow: 2;
+}
+
+.log-container {
+  flex-grow: 1;
+  align-self: center;
+}
+
+a {
+  text-decoration: none;
+  color:rgba(22, 9, 211, 0.973)
+}
+
+a:visited {
+  text-decoration: none;
+  color:rgba(22, 9, 211, 0.973)
+}
