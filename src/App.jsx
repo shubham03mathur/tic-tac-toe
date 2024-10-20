@@ -85,6 +85,7 @@ function App() {
                 {
                     square: { row: rowIndex, col: colIndex },
                     player: currentPlayer,
+                    playerName: players[currentPlayer]
                 },
                 ...prevGameTurn,
             ];
