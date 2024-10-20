@@ -95,7 +95,8 @@ function App() {
         <>
             <header>
                 <img src="game-logo.png" alt="logo" />
-                <h1>Tic-Tac-Toe</h1>
+                <h1 style={{ marginBottom: '5px'}}>Tic-Tac-Toe</h1>
+                <center><small><span style={{ color: '#3f3b00'}}>Made with</span> ❤️ <span style={{ color: '#3f3b00'}}>by <a target='_blank' href="https://www.linkedin.com/in/shubham-mathur-88502657/">Shubham</a></span></small></center>
             </header>
             <div>
                 <main>
